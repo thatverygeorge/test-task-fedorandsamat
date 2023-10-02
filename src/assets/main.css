@@ -1,0 +1,153 @@
+@font-face {
+  font-family: MartianMono;
+  src: url('./font/MartianMonoVF.woff2') format('woff2');
+  font-weight: 100 800;
+  font-stretch: 75% 112.5%;
+  font-display: swap;
+}
+
+:root {
+  --white: #fff;
+  --black: #101820;
+  --yellow: #fee715;
+  --red: #e73131;
+  --green: #0cb877;
+  --blue: #152cfe;
+  --gray: #e2e2e2;
+  --orange: #f54d2a;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  font-family: MartianMono, monospace;
+  font-size: 10px;
+  font-weight: 400;
+  color: var(--black);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+
+  @media (width < 960px) {
+    height: auto;
+  }
+}
+
+#app {
+  min-width: 320px;
+  height: 100%;
+  background-color: var(--gray);
+  display: flex;
+  flex-direction: column;
+
+  @media (width < 960px) {
+    height: auto;
+  }
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: var(--black);
+  text-decoration: none;
+  outline: none;
+}
+
+a[aria-current='page'] {
+  color: var(--orange);
+}
+
+a:focus-visible {
+  text-decoration: underline;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  white-space: nowrap;
+  clip-path: inset(100%);
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+.button {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border: 2px solid var(--orange);
+  border-radius: 5px;
+  outline: none;
+}
+
+.button:focus-visible {
+  background-color: var(--black);
+  border-color: var(--black);
+  color: var(--white);
+}
+
+.button:disabled {
+  background-color: transparent;
+  border-color: var(--black);
+  color: var(--black);
+  opacity: 0.3;
+  cursor: default;
+}
+
+@media (hover: hover) {
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .button:hover {
+    background-color: var(--black);
+    border-color: var(--black);
+    color: var(--white);
+  }
+
+  .button:disabled:hover {
+    background-color: transparent;
+    border-color: var(--black);
+    color: var(--black);
+    cursor: default;
+    opacity: 0.3;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
