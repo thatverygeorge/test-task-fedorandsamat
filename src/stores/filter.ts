@@ -11,7 +11,7 @@ export const useFilterStore = defineStore('filter', () => {
     if (!navigationStore.navigation || !filter.value) return [];
 
     return Object.values(navigationStore.navigation.pages).filter((item) =>
-      item.name.includes(filter.value.trim().toLowerCase())
+      item.name.toLowerCase().includes(filter.value.trim().toLowerCase())
     );
   });
 
