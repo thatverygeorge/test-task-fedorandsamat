@@ -5,10 +5,6 @@ import type { Navigation, Page } from '@/types';
 export const useNavigationStore = defineStore('navigation', () => {
   const navigation = ref<Navigation>();
 
-  (async () => {
-    await fetchNavigation();
-  })();
-
   async function fetchNavigation() {
     const res = await fetch('https://prolegomenon.s3.amazonaws.com/contents.json');
     const data = (await res.json()) as Navigation;
@@ -22,6 +18,8 @@ export const useNavigationStore = defineStore('navigation', () => {
 
   function getPage(key: keyof Page, value: string): Page | undefined {
     if (!navigation.value) return;
+
+    if (key === 'key') return navigation.value.pages[value];
 
     return Object.values(navigation.value.pages).find((page) => page[key] === value);
   }
