@@ -13,6 +13,7 @@ app.use(createPinia());
 
 const navigationStore = useNavigationStore();
 await navigationStore.fetchNavigation();
+navigationStore.injectOpenStatuses();
 
 app.use(router);
 

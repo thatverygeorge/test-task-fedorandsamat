@@ -6,6 +6,9 @@
     },
     {
       "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.vitest.json"
     }
   ],
   "include": ["./src/**/*"],
@@ -16,6 +19,7 @@
     },
     "module": "ES2022",
     "target": "ES2022",
-    "moduleResolution": "Node"
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true
   }
 }

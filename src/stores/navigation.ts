@@ -7,60 +7,71 @@ export const useNavigationStore = defineStore('navigation', () => {
 
   async function fetchNavigation() {
     const res = await fetch('https://prolegomenon.s3.amazonaws.com/contents.json');
-    const data = (await res.json()) as Navigation;
 
-    for (const item of Object.values(data.pages)) {
-      if (Object.hasOwn(item, 'childPageKeys')) item.isOpen = false;
-    }
+    if (!res.ok) return;
+
+    const data = (await res.json()) as Navigation;
 
     navigation.value = data;
   }
 
-  function getPage(key: keyof Page, value: string): Page | undefined {
+  function injectOpenStatuses() {
+    if (!navigation.value) return;
+
+    for (const item of Object.values(navigation.value.pages)) {
+      if (Object.hasOwn(item, 'childPageKeys')) item.isOpen = false;
+    }
+  }
+
+  function getPage(key: 'key' | 'name' | 'link', value: string): Page | undefined {
     if (!navigation.value) return;
 
     if (key === 'key') return navigation.value.pages[value];
 
-    return Object.values(navigation.value.pages).find((page) => page[key] === value);
+    return Object.values(navigation.value.pages).find(
+      (page) => page[key].toLowerCase() === value.toLowerCase()
+    );
   }
 
   function toggleItem(key: string) {
     if (!navigation.value) return;
+    if (!navigation.value.pages[key]) return;
 
     navigation.value.pages[key].isOpen = !navigation.value.pages[key].isOpen;
   }
 
   function openItem(key: string) {
     if (!navigation.value) return;
+    if (!navigation.value.pages[key]) return;
 
     if (!navigation.value.pages[key].isOpen) {
       navigation.value.pages[key].isOpen = true;
     }
   }
 
-  function openTree(slug: string) {
+  function openTree(page: Page) {
     if (!navigation.value) return;
 
-    const page = getPage('link', slug);
-
-    if (!page) return;
-
-    page.isOpen = true;
-
-    if (!page.level) return;
-    if (!page.parentKey) return;
-
-    let parentKey = page.parentKey;
-
-    for (let i = page.level; i >= 0; i--) {
-      const parent = navigation.value?.pages[parentKey];
-
-      if (parent) {
-        parent.isOpen = true;
-        parentKey = parent.parentKey ?? '';
+    while (page.level >= 0) {
+      if (page.childPageKeys) {
+        page.isOpen = true;
       }
+
+      if (!page.parentKey) {
+        break;
+      }
+
+      page = navigation.value.pages[page.parentKey];
     }
   }
 
-  return { navigation, fetchNavigation, getPage, toggleItem, openItem, openTree };
+  return {
+    navigation,
+    injectOpenStatuses,
+    fetchNavigation,
+    getPage,
+    toggleItem,
+    openItem,
+    openTree,
+  };
 });

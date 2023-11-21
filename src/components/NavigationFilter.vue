@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useFilterStore } from '@/stores/filter';
-import { debounce } from 'lodash';
+import debounce from 'lodash.debounce';
 
 const INPUT_DELAY = 1000;
 
@@ -8,7 +8,7 @@ const filterStore = useFilterStore();
 
 function handleInput(evt: Event) {
   const target = evt.target as HTMLInputElement;
-  filterStore.filter = target.value.trim().toLowerCase();
+  filterStore.filter = target.value;
 }
 
 const debouncedHandleInput = debounce(handleInput, INPUT_DELAY);

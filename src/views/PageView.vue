@@ -1,28 +1,28 @@
 <script setup lang="ts">
 import { useNavigationStore } from '@/stores/navigation';
-import { onBeforeRouteUpdate, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const props = defineProps<{
   slug: string;
 }>();
 
 const navigationStore = useNavigationStore();
-navigationStore.openTree(props.slug);
+const page = navigationStore.getPage('link', props.slug);
 
-onBeforeRouteUpdate((to) => {
-  const link = to.params.slug as string;
-  const page = navigationStore.getPage('link', link);
-
-  if (!page) {
-    const router = useRouter();
-    router.push({
-      name: 'notFound',
-      params: {
-        pathMatch: to.path.split('/').slice(1),
-      },
-    });
-  }
-});
+if (!page) {
+  const route = useRoute();
+  const router = useRouter();
+  router.push({
+    name: 'notFound',
+    params: {
+      pathMatch: route.path.split('/').slice(1),
+    },
+    query: route.query,
+    hash: route.hash,
+  });
+} else {
+  navigationStore.openTree(page);
+}
 </script>
 
 <template>
@@ -30,32 +30,31 @@ onBeforeRouteUpdate((to) => {
     <h2 id="page-heading">page: {{ slug }}</h2>
 
     <p>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Assumenda quaerat dolore saepe
-      doloribus ea, voluptates vitae quibusdam accusantium aperiam officiis provident quos
-      repudiandae voluptatum voluptas quasi. Accusantium voluptatem fugit mollitia. Consectetur
-      quisquam beatae cum nesciunt vitae sunt! Dicta, corrupti iure! Consequuntur placeat qui
-      explicabo ratione nihil aspernatur officiis dignissimos aliquam beatae iste quos tempore nam,
-      maxime quia quibusdam quae deleniti. Pariatur voluptate neque, ex suscipit sint quisquam,
-      quibusdam molestias necessitatibus eum voluptas sed laborum, quos nesciunt. Consectetur,
-      blanditiis dolor amet a, eius mollitia nesciunt impedit ut facilis explicabo nulla accusamus.
-      Provident, reprehenderit. Iste sit, ab veritatis soluta, possimus doloremque nesciunt esse
-      sunt nihil, doloribus dignissimos deleniti distinctio fuga tempora alias adipisci unde. Ex
-      quibusdam laudantium iure, quo eos amet obcaecati? Quos consequuntur praesentium dolores quas,
-      porro fugiat cum dolorum facilis accusamus autem eos perspiciatis mollitia ut. Tenetur,
-      dignissimos perspiciatis, ipsam a amet ullam, ducimus eaque blanditiis ea corrupti possimus
-      laborum. Doloremque, dignissimos excepturi iure repudiandae laboriosam sapiente vero maiores
-      dicta quae veritatis nobis, blanditiis odio libero eius obcaecati voluptatum culpa? Facilis
-      placeat enim nostrum, fugiat libero numquam! Maiores, pariatur deserunt? Explicabo ut odio
-      laudantium consectetur dolorem voluptas ea est nemo non, asperiores laborum nisi praesentium
-      ullam aut officia aspernatur eaque labore sequi doloremque eum in provident? Sapiente
-      repudiandae omnis est? Ipsa earum sequi expedita numquam tempora, nam nemo dolore consequatur
-      eveniet unde laudantium. Suscipit sed delectus impedit est laborum eum numquam ab odio cumque
-      quia, rerum, iure aperiam quo architecto. Nam tenetur ad tempora consectetur quo ut
-      repellendus mollitia beatae tempore, voluptate eius excepturi laudantium dolorum itaque
-      quibusdam, ipsum magni animi laboriosam autem ratione doloribus. Aperiam laudantium
-      consequuntur deserunt aliquam. Provident nostrum architecto est mollitia dolorem culpa iure
-      perspiciatis reprehenderit explicabo, sint rem eum tenetur consequuntur saepe? Sed voluptatum
-      quidem animi temporibus suscipit quo alias molestias tenetur ullam. Harum, illum?
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero pariatur in sint officiis
+      minima. Vel ad ea eveniet necessitatibus illo deserunt, dolorum temporibus ipsam velit illum
+      sed maxime neque nihil. Voluptas laudantium rerum animi, beatae, unde harum velit asperiores
+      magnam quod sed nobis quaerat at. Sint, error! Nulla eligendi soluta magni? Accusantium optio
+      architecto quae magni doloremque tempore modi itaque? Odio nesciunt labore facilis excepturi
+      soluta quidem mollitia, doloribus minus aut illo hic nisi maiores architecto optio consectetur
+      dignissimos iure atque reprehenderit et cupiditate reiciendis voluptas? Quam explicabo eum
+      nam. Recusandae laborum tempora quas ducimus quo, quaerat et accusantium ipsam aliquid ipsum,
+      illo consectetur culpa non delectus esse id optio maiores nostrum assumenda obcaecati nisi
+      itaque! Iste ipsa fugit accusantium! Qui fugit accusamus repellat quisquam, in esse quasi
+      laudantium aperiam repellendus veniam voluptatum nostrum quam omnis quae aut laboriosam
+      aspernatur eius ea ducimus, sint ad amet. Maxime odit maiores earum? Rerum veniam, nobis
+      placeat autem omnis sunt quam vel ut amet perspiciatis architecto laboriosam dicta ducimus
+      voluptas sed ea aperiam vitae facilis debitis unde hic aliquid. Assumenda repellendus dolores
+      ab? Provident nobis, aut debitis nemo laborum laudantium repellendus autem tempore quos vitae
+      iusto accusamus consequatur earum molestiae id. Veritatis laudantium non optio deleniti
+      laboriosam soluta consequuntur excepturi a id porro! Natus temporibus amet mollitia iste. Quod
+      est asperiores sint. Ab voluptatum repellendus similique eaque? Numquam quasi ab voluptatem
+      culpa facilis repudiandae laborum vel at facere voluptatum, sequi, blanditiis minus
+      voluptates? Sint minima omnis beatae enim fugit aut consequuntur molestiae dolore sed!
+      Mollitia minus cum explicabo, maxime suscipit commodi distinctio molestiae optio itaque
+      corrupti! Quidem, repellendus exercitationem reprehenderit neque quasi nihil? Aperiam,
+      ducimus, doloremque temporibus quaerat pariatur tempora a ex voluptatem incidunt quasi
+      accusamus fuga dolor rerum labore iure quia suscipit, maiores praesentium? Delectus dolorum
+      saepe nihil animi beatae sapiente repellat.
     </p>
   </section>
 </template>

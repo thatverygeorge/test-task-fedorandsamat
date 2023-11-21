@@ -6,7 +6,7 @@ import TheFooter from '@/components/TheFooter.vue';
 import TheNavigation from '@/components/TheNavigation.vue';
 import NavigationFilter from '@/components/NavigationFilter.vue';
 
-const isOpen = ref<boolean>(false);
+const isNavigationOpen = ref<boolean>(false);
 </script>
 
 <template>
@@ -17,10 +17,10 @@ const isOpen = ref<boolean>(false);
       <button
         class="button"
         type="button"
-        :aria-expanded="isOpen"
+        :aria-expanded="isNavigationOpen"
         aria-controls="main_navigation"
         aria-label="expand main navigation"
-        @click="isOpen = !isOpen"
+        @click="isNavigationOpen = !isNavigationOpen"
       >
         <span aria-hidden="true">↧</span>
       </button>

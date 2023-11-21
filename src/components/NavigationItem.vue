@@ -22,15 +22,12 @@ const navigationStore = useNavigationStore();
         type="button"
         :aria-expanded="props.page.isOpen"
         :aria-controls="`id_${props.page.key}_menu`"
-        :aria-label="`expand ${props.page.name} menu`"
+        :aria-label="`expand ${props.page.name.toLowerCase()} menu`"
         @click="navigationStore.toggleItem(props.page.key)"
       >
         <span aria-hidden="true">▶</span>
       </button>
-      <RouterLink
-        :to="{ name: 'page', params: { slug: props.page.link } }"
-        @click="navigationStore.openItem(props.page.key)"
-      >
+      <RouterLink :to="{ name: 'page', params: { slug: props.page.link } }">
         {{ props.page.name.toLowerCase() }}
       </RouterLink>
       <ul :id="`id_${props.page.key}_menu`">
