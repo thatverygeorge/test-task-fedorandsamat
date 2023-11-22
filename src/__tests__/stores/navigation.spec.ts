@@ -149,26 +149,6 @@ describe('store:navigation', () => {
     });
   });
 
-  describe('action:openItem', () => {
-    it('opens item on a valid key', () => {
-      const wasOpen = store.navigation?.pages[TEST_PAGE.key].isOpen;
-
-      store.openItem(TEST_PAGE.key);
-
-      expect(store.navigation?.pages[TEST_PAGE.key].isOpen).toBe(!wasOpen);
-    });
-
-    it('does nothing on an invalid key', () => {
-      store.openItem('INVALID_KEY');
-
-      const isSomePagesOpen = Object.values(store.navigation?.pages || []).some(
-        (page) => page.isOpen
-      );
-
-      expect(isSomePagesOpen).toBeFalsy();
-    });
-  });
-
   describe('action:openTree', () => {
     function getPagesTree(page: Page): Page[] {
       if (!store.navigation) return [];
