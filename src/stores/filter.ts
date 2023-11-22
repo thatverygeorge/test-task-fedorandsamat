@@ -8,11 +8,13 @@ export const useFilterStore = defineStore('filter', () => {
   const navigationStore = useNavigationStore();
 
   const filteredNavigation = computed<Page[]>(() => {
-    if (!navigationStore.navigation || !filter.value) return [];
+    if (navigationStore.navigation && filter.value) {
+      return Object.values(navigationStore.navigation.pages).filter((item) =>
+        item.name.toLowerCase().includes(filter.value.trim().toLowerCase())
+      );
+    }
 
-    return Object.values(navigationStore.navigation.pages).filter((item) =>
-      item.name.toLowerCase().includes(filter.value.trim().toLowerCase())
-    );
+    return [];
   });
 
   function clear() {

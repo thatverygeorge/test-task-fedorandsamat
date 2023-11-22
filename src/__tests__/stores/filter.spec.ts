@@ -20,6 +20,8 @@ describe('store:navigation', () => {
 
   describe('computed:filteredNavigation', () => {
     it('is empty on empty filter', async () => {
+      filterStore.filter = '';
+
       expect(filterStore.filteredNavigation).toStrictEqual([]);
     });
 

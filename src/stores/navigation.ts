@@ -33,7 +33,7 @@ export const useNavigationStore = defineStore('navigation', () => {
   }
 
   function toggleItem(key: string) {
-    if (navigation.value && navigation.value.pages[key]) {
+    if (navigation.value?.pages[key]) {
       navigation.value.pages[key].isOpen = !navigation.value.pages[key].isOpen;
     }
   }
