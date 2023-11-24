@@ -33,8 +33,9 @@ export const useNavigationStore = defineStore('navigation', () => {
   }
 
   function toggleItem(key: string) {
-    if (navigation.value?.pages[key]) {
-      navigation.value.pages[key].isOpen = !navigation.value.pages[key].isOpen;
+    if (navigation.value) {
+      const page = navigation.value.pages[key];
+      if (page) page.isOpen = !page.isOpen;
     }
   }
 
@@ -45,11 +46,12 @@ export const useNavigationStore = defineStore('navigation', () => {
           page.isOpen = true;
         }
 
-        if (!page.parentKey) {
+        if (page.parentKey) {
+          const parentPage = navigation.value.pages[page.parentKey];
+          if (parentPage) page = parentPage;
+        } else {
           break;
         }
-
-        page = navigation.value.pages[page.parentKey];
       }
     }
   }

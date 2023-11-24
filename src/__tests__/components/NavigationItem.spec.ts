@@ -5,6 +5,9 @@ import { useNavigationStore } from '@/stores/navigation';
 import mockNavigation from '@/__tests__/fixtures/navigation';
 import NavigationItem from '@/components/NavigationItem.vue';
 
+const TEST_PAGE_WITH_CHILDREN = mockNavigation.pages['capital_vol'];
+if (!TEST_PAGE_WITH_CHILDREN) throw new Error('TEST_PAGE is undefined');
+
 let wrapper: VueWrapper;
 let navigationStore: ReturnType<typeof useNavigationStore>;
 
@@ -38,6 +41,8 @@ describe('NavigationItem', () => {
 
   it('renders properly when props:page is valid (no childPageKeys)', async () => {
     const TEST_PAGE = mockNavigation.pages['denominator_behind_at_shyly_er'];
+    if (!TEST_PAGE) throw new Error('TEST_PAGE is undefined');
+
     await wrapper.setProps({ page: TEST_PAGE });
 
     const listItem = wrapper.find('li');
@@ -56,10 +61,9 @@ describe('NavigationItem', () => {
   });
 
   it('renders properly when props:page is valid (with childPageKeys)', async () => {
-    const TEST_PAGE = mockNavigation.pages['capital_vol'];
     const TEST_PAGE_CHILD =
-      mockNavigation.pages[TEST_PAGE.childPageKeys?.[0] || 'bronze_gah_whenever'];
-    await wrapper.setProps({ page: TEST_PAGE });
+      mockNavigation.pages[TEST_PAGE_WITH_CHILDREN.childPageKeys?.[0] || 'bronze_gah_whenever'];
+    await wrapper.setProps({ page: TEST_PAGE_WITH_CHILDREN });
 
     const listItem = wrapper.find('li');
     expect(listItem.exists()).toBeTruthy();
@@ -67,8 +71,10 @@ describe('NavigationItem', () => {
     const button = listItem.find('button');
     expect(button.exists()).toBeTruthy();
     expect(button.attributes('type')).toBe('button');
-    expect(button.attributes('aria-controls')).toBe(`id_${TEST_PAGE.key}_menu`);
-    expect(button.attributes('aria-label')).toBe(`expand ${TEST_PAGE.name.toLowerCase()} menu`);
+    expect(button.attributes('aria-controls')).toBe(`id_${TEST_PAGE_WITH_CHILDREN.key}_menu`);
+    expect(button.attributes('aria-label')).toBe(
+      `expand ${TEST_PAGE_WITH_CHILDREN.name.toLowerCase()} menu`
+    );
 
     const span = button.find('span');
     expect(span.exists()).toBeTruthy();
@@ -77,15 +83,15 @@ describe('NavigationItem', () => {
 
     const routerLink = listItem.findComponent(RouterLinkStub);
     expect(routerLink.exists()).toBeTruthy();
-    expect(routerLink.text()).toBe(TEST_PAGE.name.toLowerCase());
+    expect(routerLink.text()).toBe(TEST_PAGE_WITH_CHILDREN.name.toLowerCase());
     expect(routerLink.props().to).toStrictEqual({
       name: 'page',
-      params: { slug: TEST_PAGE.link },
+      params: { slug: TEST_PAGE_WITH_CHILDREN.link },
     });
 
     const innerList = listItem.find('ul');
     expect(innerList.exists()).toBeTruthy();
-    expect(innerList.attributes('id')).toBe(`id_${TEST_PAGE.key}_menu`);
+    expect(innerList.attributes('id')).toBe(`id_${TEST_PAGE_WITH_CHILDREN.key}_menu`);
 
     const navigationItem = innerList.findComponent(NavigationItem);
     expect(navigationItem.exists()).toBeTruthy();
@@ -94,8 +100,7 @@ describe('NavigationItem', () => {
   });
 
   it('button click calls action:toggleItem', async () => {
-    const TEST_PAGE = mockNavigation.pages['capital_vol'];
-    await wrapper.setProps({ page: TEST_PAGE });
+    await wrapper.setProps({ page: TEST_PAGE_WITH_CHILDREN });
 
     const listItem = wrapper.find('li');
     const button = listItem.find('button');
@@ -106,9 +111,8 @@ describe('NavigationItem', () => {
   });
 
   it("button's aria-expanded is false when props.page.isOpen is false", async () => {
-    const TEST_PAGE = mockNavigation.pages['capital_vol'];
-    TEST_PAGE.isOpen = false;
-    await wrapper.setProps({ page: TEST_PAGE });
+    TEST_PAGE_WITH_CHILDREN.isOpen = false;
+    await wrapper.setProps({ page: TEST_PAGE_WITH_CHILDREN });
 
     const button = wrapper.find('button');
 
@@ -116,9 +120,8 @@ describe('NavigationItem', () => {
   });
 
   it("button's aria-expanded is true when props.page.isOpen is true", async () => {
-    const TEST_PAGE = mockNavigation.pages['capital_vol'];
-    TEST_PAGE.isOpen = true;
-    await wrapper.setProps({ page: TEST_PAGE });
+    TEST_PAGE_WITH_CHILDREN.isOpen = true;
+    await wrapper.setProps({ page: TEST_PAGE_WITH_CHILDREN });
 
     const button = wrapper.find('button');
 

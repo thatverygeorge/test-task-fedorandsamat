@@ -5,6 +5,7 @@ import mockNavigation from '@/__tests__/fixtures/navigation';
 import type { Page } from '@/types';
 
 const TEST_PAGE = mockNavigation.pages['capital_vol'];
+if (!TEST_PAGE) throw new Error('TEST_PAGE is undefined');
 
 global.fetch = vi.fn().mockResolvedValue({
   ok: true,
@@ -89,13 +90,13 @@ describe('store:navigation', () => {
     });
 
     it('returns a page on a valid name (lowercase)', () => {
-      const page = store.getPage('name', 'capital vol');
+      const page = store.getPage('name', TEST_PAGE.name);
 
       expect(page).toStrictEqual(TEST_PAGE);
     });
 
     it('returns a page on a valid name (uppercase)', () => {
-      const page = store.getPage('name', 'capital vol'.toUpperCase());
+      const page = store.getPage('name', TEST_PAGE.name.toUpperCase());
 
       expect(page).toStrictEqual(TEST_PAGE);
     });
@@ -107,13 +108,13 @@ describe('store:navigation', () => {
     });
 
     it('returns a page on a valid link (lowercase)', () => {
-      const page = store.getPage('link', 'capital-vol.html');
+      const page = store.getPage('link', TEST_PAGE.link);
 
       expect(page).toStrictEqual(TEST_PAGE);
     });
 
     it('returns a page on a valid link (uppercase)', () => {
-      const page = store.getPage('link', 'capital-vol.html'.toUpperCase());
+      const page = store.getPage('link', TEST_PAGE.link.toUpperCase());
 
       expect(page).toStrictEqual(TEST_PAGE);
     });
@@ -127,15 +128,17 @@ describe('store:navigation', () => {
 
   describe('action:toggleItem', () => {
     it('toggles item on a valid key', () => {
-      const wasOpen = store.navigation?.pages[TEST_PAGE.key].isOpen || false;
+      const TEST_PAGE = store.navigation?.pages['capital_vol'];
+      if (!TEST_PAGE) throw new Error('TEST_PAGE is undefined');
+      const wasOpen = TEST_PAGE.isOpen || false;
 
       store.toggleItem(TEST_PAGE.key);
 
-      expect(store.navigation?.pages[TEST_PAGE.key].isOpen).toBe(!wasOpen);
+      expect(TEST_PAGE.isOpen).toBe(!wasOpen);
 
       store.toggleItem(TEST_PAGE.key);
 
-      expect(store.navigation?.pages[TEST_PAGE.key].isOpen).toBe(wasOpen);
+      expect(TEST_PAGE.isOpen).toBe(wasOpen);
     });
 
     it('does nothing on an invalid key', () => {
@@ -158,77 +161,65 @@ describe('store:navigation', () => {
       while (page.level >= 0) {
         arr.push(page);
 
-        if (!page.parentKey) {
+        if (page.parentKey) {
+          const parentPage = store.navigation.pages[page.parentKey];
+          if (parentPage) page = parentPage;
+        } else {
           break;
         }
-
-        page = store.navigation.pages[page.parentKey];
       }
 
       return arr;
     }
 
     it('opens a tree of a level 5 page without childPageKeys', () => {
-      if (!store.navigation) throw new Error('store.navigation is undefined');
+      const TEST_PAGE = store.navigation?.pages['besides_madly'];
+      if (!TEST_PAGE) throw new Error('TEST_PAGE is undefined');
 
-      const wasOpen = store.navigation.pages['besides_madly'].isOpen;
-      const openStatusesBefore = getOpenStatuses(
-        getPagesTree(store.navigation.pages['besides_madly'])
-      );
+      const wasOpen = TEST_PAGE.isOpen;
+      const openStatusesBefore = getOpenStatuses(getPagesTree(TEST_PAGE));
 
-      store.openTree(store.navigation.pages['besides_madly']);
+      store.openTree(TEST_PAGE);
 
-      const openStatusesAfter = getOpenStatuses(
-        getPagesTree(store.navigation.pages['besides_madly'])
-      );
+      const openStatusesAfter = getOpenStatuses(getPagesTree(TEST_PAGE));
       expect(openStatusesBefore.slice(1).map((el) => !el)).toStrictEqual(
         openStatusesAfter.slice(1)
       );
-      expect(store.navigation.pages['besides_madly'].isOpen).toBe(wasOpen);
+      expect(TEST_PAGE.isOpen).toBe(wasOpen);
     });
 
     it('opens a tree of a level 4 page with childPageKeys', () => {
-      if (!store.navigation) throw new Error('store.navigation is undefined');
+      const TEST_PAGE = store.navigation?.pages['millet_justly_royal'];
+      if (!TEST_PAGE) throw new Error('TEST_PAGE is undefined');
 
-      const openStatusesBefore = getOpenStatuses(
-        getPagesTree(store.navigation.pages['millet_justly_royal'])
-      );
+      const openStatusesBefore = getOpenStatuses(getPagesTree(TEST_PAGE));
 
-      store.openTree(store.navigation.pages['millet_justly_royal']);
+      store.openTree(TEST_PAGE);
 
-      const openStatusesAfter = getOpenStatuses(
-        getPagesTree(store.navigation.pages['millet_justly_royal'])
-      );
+      const openStatusesAfter = getOpenStatuses(getPagesTree(TEST_PAGE));
       expect(openStatusesBefore.map((el) => !el)).toStrictEqual(openStatusesAfter);
     });
 
     it('opens a tree of a level 0 page without childPageKeys', () => {
-      if (!store.navigation) throw new Error('store.navigation is undefined');
+      const TEST_PAGE = store.navigation?.pages['denominator_behind_at_shyly_er'];
+      if (!TEST_PAGE) throw new Error('TEST_PAGE is undefined');
 
-      const openStatusesBefore = getOpenStatuses(
-        getPagesTree(store.navigation.pages['denominator_behind_at_shyly_er'])
-      );
+      const openStatusesBefore = getOpenStatuses(getPagesTree(TEST_PAGE));
 
-      store.openTree(store.navigation.pages['denominator_behind_at_shyly_er']);
+      store.openTree(TEST_PAGE);
 
-      const openStatusesAfter = getOpenStatuses(
-        getPagesTree(store.navigation.pages['denominator_behind_at_shyly_er'])
-      );
+      const openStatusesAfter = getOpenStatuses(getPagesTree(TEST_PAGE));
       expect(openStatusesBefore).toStrictEqual(openStatusesAfter);
     });
 
     it('opens a tree of a level 0 page with childPageKeys', () => {
-      if (!store.navigation) throw new Error('store.navigation is undefined');
+      const TEST_PAGE = store.navigation?.pages['capital_vol'];
+      if (!TEST_PAGE) throw new Error('TEST_PAGE is undefined');
+      const openStatusesBefore = getOpenStatuses(getPagesTree(TEST_PAGE));
 
-      const openStatusesBefore = getOpenStatuses(
-        getPagesTree(store.navigation.pages['capital_vol'])
-      );
+      store.openTree(TEST_PAGE);
 
-      store.openTree(store.navigation.pages['capital_vol']);
-
-      const openStatusesAfter = getOpenStatuses(
-        getPagesTree(store.navigation.pages['capital_vol'])
-      );
+      const openStatusesAfter = getOpenStatuses(getPagesTree(TEST_PAGE));
       expect(openStatusesBefore.map((el) => !el)).toStrictEqual(openStatusesAfter);
     });
   });

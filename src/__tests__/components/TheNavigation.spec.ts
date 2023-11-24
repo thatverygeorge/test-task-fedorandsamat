@@ -61,16 +61,13 @@ describe('TheNavigation', () => {
     expect(list.exists()).toBeTruthy();
 
     const routerLinks = list.findAllComponents(RouterLinkStub);
-    expect(routerLinks).toHaveLength(2);
-    expect(routerLinks[0].text()).toBe(filterStore.filteredNavigation[0].name.toLowerCase());
-    expect(routerLinks[0].props().to).toStrictEqual({
-      name: 'page',
-      params: { slug: filterStore.filteredNavigation[0].link },
-    });
-    expect(routerLinks[1].text()).toBe(filterStore.filteredNavigation[1].name.toLowerCase());
-    expect(routerLinks[1].props().to).toStrictEqual({
-      name: 'page',
-      params: { slug: filterStore.filteredNavigation[1].link },
+    expect(routerLinks).toHaveLength(filterStore.filteredNavigation.length);
+    filterStore.filteredNavigation.forEach((nav, i) => {
+      expect(routerLinks[i].text()).toBe(nav.name.toLowerCase());
+      expect(routerLinks[i].props().to).toStrictEqual({
+        name: 'page',
+        params: { slug: nav.link },
+      });
     });
   });
 
@@ -94,8 +91,9 @@ describe('TheNavigation', () => {
     expect(list.exists()).toBeTruthy();
 
     const navigationItems = list.findAllComponents(NavigationItem);
-    expect(navigationItems).toHaveLength(2);
-    expect(navigationItems[0].props().page).toStrictEqual(levelZeroPages[0]);
-    expect(navigationItems[1].props().page).toStrictEqual(levelZeroPages[1]);
+    expect(navigationItems).toHaveLength(levelZeroPages.length);
+    levelZeroPages.forEach((page, i) => {
+      expect(navigationItems[i].props().page).toStrictEqual(page);
+    });
   });
 });
