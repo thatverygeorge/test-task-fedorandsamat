@@ -1,3 +1,4 @@
+import type { ComponentPublicInstance } from 'vue';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { RouterLinkStub, VueWrapper, mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
@@ -12,7 +13,7 @@ let wrapper: VueWrapper;
 let navigationStore: ReturnType<typeof useNavigationStore>;
 
 describe('NavigationItem', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     const pinia = createTestingPinia({
       createSpy: vi.fn,
       stubActions: false,
@@ -21,7 +22,7 @@ describe('NavigationItem', () => {
     navigationStore = useNavigationStore();
     navigationStore.navigation = structuredClone(mockNavigation);
 
-    wrapper = mount(NavigationItem, {
+    wrapper = mount<unknown, ComponentPublicInstance>(NavigationItem, {
       props: {
         page: undefined,
       },
@@ -34,7 +35,7 @@ describe('NavigationItem', () => {
     });
   });
 
-  it('renders properly when props:page is undefined', async () => {
+  it('renders properly when props:page is undefined', () => {
     const listItem = wrapper.find('li');
     expect(listItem.exists()).toBeFalsy();
   });

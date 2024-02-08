@@ -1,3 +1,4 @@
+import type { Component } from 'vue';
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
 import PageView from '@/views/PageView.vue';
@@ -8,18 +9,18 @@ export const routes: RouteRecordRaw[] = [
     path: '/',
     alias: '/home',
     name: 'home',
-    component: HomeView,
+    component: HomeView as Component,
   },
   {
     path: '/:slug',
     name: 'page',
-    component: PageView,
+    component: PageView as Component,
     props: true,
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'notFound',
-    component: NotFoundView,
+    component: NotFoundView as Component,
   },
 ];
 

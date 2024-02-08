@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { RouterLinkStub, shallowMount } from '@vue/test-utils';
+import { RouterLinkStub, shallowMount, type VueWrapper } from '@vue/test-utils';
 import { createTestingPinia, type TestingPinia } from '@pinia/testing';
 import { useNavigationStore } from '@/stores/navigation';
 import { useFilterStore } from '@/stores/filter';
@@ -60,11 +60,11 @@ describe('TheNavigation', () => {
     const list = nav.find('ul');
     expect(list.exists()).toBeTruthy();
 
-    const routerLinks = list.findAllComponents(RouterLinkStub);
+    const routerLinks = list.findAllComponents(RouterLinkStub) as VueWrapper[];
     expect(routerLinks).toHaveLength(filterStore.filteredNavigation.length);
     filterStore.filteredNavigation.forEach((nav, i) => {
-      expect(routerLinks[i].text()).toBe(nav.name.toLowerCase());
-      expect(routerLinks[i].props().to).toStrictEqual({
+      expect(routerLinks[i]!.text()).toBe(nav.name.toLowerCase());
+      expect(routerLinks[i]!.props().to).toStrictEqual({
         name: 'page',
         params: { slug: nav.link },
       });
@@ -90,10 +90,10 @@ describe('TheNavigation', () => {
     const list = nav.find('ul');
     expect(list.exists()).toBeTruthy();
 
-    const navigationItems = list.findAllComponents(NavigationItem);
+    const navigationItems = list.findAllComponents(NavigationItem) as VueWrapper[];
     expect(navigationItems).toHaveLength(levelZeroPages.length);
     levelZeroPages.forEach((page, i) => {
-      expect(navigationItems[i].props().page).toStrictEqual(page);
+      expect(navigationItems[i]!.props().page).toStrictEqual(page);
     });
   });
 });

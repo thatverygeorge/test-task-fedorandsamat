@@ -1,3 +1,4 @@
+import type { ComponentPublicInstance } from 'vue';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { VueWrapper, shallowMount } from '@vue/test-utils';
 import { createRouter, createWebHistory, RouterView, type Router } from 'vue-router';
@@ -12,20 +13,20 @@ let router: Router;
 let wrapper: VueWrapper;
 
 describe('PageView', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     router = createRouter({
       history: createWebHistory(),
       routes: routes,
     });
 
-    wrapper = shallowMount(App, {
+    wrapper = shallowMount<unknown, ComponentPublicInstance>(App, {
       global: {
         plugins: [router],
       },
     });
   });
 
-  it('renders properly', async () => {
+  it('renders properly', () => {
     expect(wrapper.findComponent(TheHeader).exists()).toBeTruthy();
     expect(wrapper.findComponent(TheFooter).exists()).toBeTruthy();
 

@@ -61,7 +61,7 @@ describe('store:navigation', () => {
   });
 
   describe('action:injectOpenStatuses', () => {
-    it('injects open status into the pages', async () => {
+    it('injects open status into the pages', () => {
       const pagesToCheck = Object.values(store.navigation?.pages || []).filter(
         (p) => p.childPageKeys
       );

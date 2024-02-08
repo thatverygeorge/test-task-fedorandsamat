@@ -15,7 +15,7 @@ let router: Router;
 let navigationStore: ReturnType<typeof useNavigationStore>;
 
 describe('PageView', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     pinia = createTestingPinia({
       createSpy: vi.fn,
       stubActions: false,
@@ -31,7 +31,7 @@ describe('PageView', () => {
   });
 
   it('renders properly on a valid slug', async () => {
-    router.push({ name: 'page', params: { slug: TETS_SLUG } });
+    await router.push({ name: 'page', params: { slug: TETS_SLUG } });
     await router.isReady();
     const spyOnPush = vi.spyOn(router, 'push');
 
@@ -56,7 +56,7 @@ describe('PageView', () => {
   });
 
   it('redirects to 404 on an invalid slug', async () => {
-    router.push({ name: 'page', params: { slug: TETS_SLUG_INVALID } });
+    await router.push({ name: 'page', params: { slug: TETS_SLUG_INVALID } });
     await router.isReady();
     const spyOnPush = vi.spyOn(router, 'push');
 

@@ -19,32 +19,32 @@ describe('store:navigation', () => {
   });
 
   describe('computed:filteredNavigation', () => {
-    it('is empty on empty filter', async () => {
+    it('is empty on empty filter', () => {
       filterStore.filter = '';
 
       expect(filterStore.filteredNavigation).toStrictEqual([]);
     });
 
-    it('is empty on empty navigation', async () => {
+    it('is empty on empty navigation', () => {
       filterStore.filter = FILTER_MATCH;
       navigationStore.navigation = undefined;
 
       expect(filterStore.filteredNavigation).toStrictEqual([]);
     });
 
-    it('is empty on no match', async () => {
+    it('is empty on no match', () => {
       filterStore.filter = FILTER_NO_MATCH;
 
       expect(filterStore.filteredNavigation).toStrictEqual([]);
     });
 
-    it('is not empty on match (lowercase)', async () => {
+    it('is not empty on match (lowercase)', () => {
       filterStore.filter = FILTER_MATCH.toLowerCase();
 
       expect(filterStore.filteredNavigation).toHaveLength(2);
     });
 
-    it('is not empty on match (uppercase)', async () => {
+    it('is not empty on match (uppercase)', () => {
       filterStore.filter = FILTER_MATCH.toUpperCase();
 
       expect(filterStore.filteredNavigation).toHaveLength(2);
@@ -52,7 +52,7 @@ describe('store:navigation', () => {
   });
 
   describe('action:clear', () => {
-    it('clears the store', async () => {
+    it('clears the store', () => {
       filterStore.filter = FILTER_MATCH;
       expect(filterStore.filter).toBe(FILTER_MATCH);
 

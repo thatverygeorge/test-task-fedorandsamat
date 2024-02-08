@@ -1,3 +1,4 @@
+import type { ComponentPublicInstance } from 'vue';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { VueWrapper, shallowMount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
@@ -5,14 +6,14 @@ import { useFilterStore } from '@/stores/filter';
 import NavigationFilter from '@/components/NavigationFilter.vue';
 
 vi.mock('lodash.debounce', () => ({
-  default: vi.fn((fn) => fn),
+  default: vi.fn((fn: () => unknown) => fn),
 }));
 
 let wrapper: VueWrapper;
 
 describe('NavigationFilter', () => {
   beforeEach(() => {
-    wrapper = shallowMount(NavigationFilter, {
+    wrapper = shallowMount<unknown, ComponentPublicInstance>(NavigationFilter, {
       global: {
         plugins: [
           createTestingPinia({

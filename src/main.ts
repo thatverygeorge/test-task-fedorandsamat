@@ -1,13 +1,13 @@
 import './assets/main.css';
 
-import { createApp } from 'vue';
+import { createApp, type Component } from 'vue';
 import { createPinia } from 'pinia';
 import { useNavigationStore } from '@/stores/navigation';
 
 import App from '@/App.vue';
 import router from '@/router';
 
-const app = createApp(App);
+const app = createApp(App as Component);
 
 app.use(createPinia());
 
