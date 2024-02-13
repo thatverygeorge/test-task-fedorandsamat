@@ -17,13 +17,11 @@ const filterStore = useFilterStore();
       />
     </ul>
     <ul v-else-if="filterStore.filteredNavigation.length">
-      <RouterLink
-        v-for="page in filterStore.filteredNavigation"
-        :to="{ name: 'page', params: { slug: page.link } }"
-        :key="page.key"
-      >
-        {{ page.name.toLowerCase() }}
-      </RouterLink>
+      <li v-for="page in filterStore.filteredNavigation" :key="page.key">
+        <RouterLink :to="{ name: 'page', params: { slug: page.link } }">
+          {{ page.name.toLowerCase() }}
+        </RouterLink>
+      </li>
     </ul>
     <p v-else>nothing to show yet</p>
   </nav>

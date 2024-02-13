@@ -11,7 +11,7 @@
       "path": "./tsconfig.vitest.json"
     }
   ],
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*", "src/__tests__/e2e"],
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {

@@ -5,7 +5,7 @@ import { useNavigationStore } from '@/stores/navigation';
 import mockNavigation from '@/__tests__/fixtures/navigation';
 
 const FILTER_MATCH = 'ver';
-const FILTER_NO_MATCH = 'NO_MATCH';
+const FILTER_NO_MATCH = 'FILTER_NO_MATCH';
 
 let filterStore: ReturnType<typeof useFilterStore>;
 let navigationStore: ReturnType<typeof useNavigationStore>;

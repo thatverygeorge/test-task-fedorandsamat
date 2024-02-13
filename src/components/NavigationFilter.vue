@@ -21,9 +21,10 @@ const debouncedHandleInput = debounce(handleInput, INPUT_DELAY);
       <input
         :value="filterStore.filter"
         @input="debouncedHandleInput"
+        type="text"
         id="filter"
         name="filter"
-        type="text"
+        aria-label="filter"
         autocomplete="off"
       />
       <button class="button" type="button" @click="filterStore.clear">clear</button>

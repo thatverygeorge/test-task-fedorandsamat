@@ -4,7 +4,9 @@ import { useNavigationStore } from '@/stores/navigation';
 import mockNavigation from '@/__tests__/fixtures/navigation';
 import type { Page } from '@/types';
 
-const TEST_PAGE = mockNavigation.pages['capital_vol'];
+const TEST_PAGE = Object.values(mockNavigation.pages).find(
+  (el) => el.level == 0 && Object.hasOwn(el, 'childPageKeys')
+);
 if (!TEST_PAGE) throw new Error('TEST_PAGE is undefined');
 
 global.fetch = vi.fn().mockResolvedValue({
@@ -62,7 +64,7 @@ describe('store:navigation', () => {
 
   describe('action:injectOpenStatuses', () => {
     it('injects open status into the pages', () => {
-      const pagesToCheck = Object.values(store.navigation?.pages || []).filter(
+      const pagesToCheck = Object.values(store.navigation?.pages ?? []).filter(
         (p) => p.childPageKeys
       );
 
@@ -128,9 +130,11 @@ describe('store:navigation', () => {
 
   describe('action:toggleItem', () => {
     it('toggles item on a valid key', () => {
-      const TEST_PAGE = store.navigation?.pages['capital_vol'];
+      const TEST_PAGE = Object.values(store.navigation?.pages ?? []).find((el) =>
+        Object.hasOwn(el, 'childPageKeys')
+      );
       if (!TEST_PAGE) throw new Error('TEST_PAGE is undefined');
-      const wasOpen = TEST_PAGE.isOpen || false;
+      const wasOpen = TEST_PAGE.isOpen ?? false;
 
       store.toggleItem(TEST_PAGE.key);
 
@@ -144,11 +148,11 @@ describe('store:navigation', () => {
     it('does nothing on an invalid key', () => {
       store.toggleItem('INVALID_KEY');
 
-      if (store.navigation) {
-        const isSomePagesOpen = Object.values(store.navigation?.pages).some((page) => page.isOpen);
+      const isSomePagesOpen = Object.values(store.navigation?.pages ?? []).some(
+        (page) => page.isOpen
+      );
 
-        expect(isSomePagesOpen).toBeFalsy();
-      }
+      expect(isSomePagesOpen).toBeFalsy();
     });
   });
 
@@ -173,7 +177,9 @@ describe('store:navigation', () => {
     }
 
     it('opens a tree of a level 5 page without childPageKeys', () => {
-      const TEST_PAGE = store.navigation?.pages['besides_madly'];
+      const TEST_PAGE = Object.values(store.navigation?.pages ?? []).find(
+        (el) => el.level == 5 && !Object.hasOwn(el, 'childPageKeys')
+      );
       if (!TEST_PAGE) throw new Error('TEST_PAGE is undefined');
 
       const wasOpen = TEST_PAGE.isOpen;
@@ -189,7 +195,9 @@ describe('store:navigation', () => {
     });
 
     it('opens a tree of a level 4 page with childPageKeys', () => {
-      const TEST_PAGE = store.navigation?.pages['millet_justly_royal'];
+      const TEST_PAGE = Object.values(store.navigation?.pages ?? []).find(
+        (el) => el.level == 4 && Object.hasOwn(el, 'childPageKeys')
+      );
       if (!TEST_PAGE) throw new Error('TEST_PAGE is undefined');
 
       const openStatusesBefore = getOpenStatuses(getPagesTree(TEST_PAGE));
@@ -201,7 +209,9 @@ describe('store:navigation', () => {
     });
 
     it('opens a tree of a level 0 page without childPageKeys', () => {
-      const TEST_PAGE = store.navigation?.pages['denominator_behind_at_shyly_er'];
+      const TEST_PAGE = Object.values(store.navigation?.pages ?? []).find(
+        (el) => el.level == 0 && !Object.hasOwn(el, 'childPageKeys')
+      );
       if (!TEST_PAGE) throw new Error('TEST_PAGE is undefined');
 
       const openStatusesBefore = getOpenStatuses(getPagesTree(TEST_PAGE));
@@ -213,7 +223,9 @@ describe('store:navigation', () => {
     });
 
     it('opens a tree of a level 0 page with childPageKeys', () => {
-      const TEST_PAGE = store.navigation?.pages['capital_vol'];
+      const TEST_PAGE = Object.values(store.navigation?.pages ?? []).find(
+        (el) => el.level == 0 && Object.hasOwn(el, 'childPageKeys')
+      );
       if (!TEST_PAGE) throw new Error('TEST_PAGE is undefined');
       const openStatusesBefore = getOpenStatuses(getPagesTree(TEST_PAGE));
 
