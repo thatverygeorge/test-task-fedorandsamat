@@ -12,6 +12,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('renders properly', async ({ page }) => {
+  await expect(page.getByRole('group', { name: 'filter' })).toBeVisible();
   await expect(page.getByRole('textbox', { name: 'filter' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'clear' })).toBeVisible();
 });

@@ -46,16 +46,66 @@ test('click on an item redirects to relevant page', async ({ page }) => {
   ).toBeVisible();
 });
 
-test('click on an item opens additional navigation', async ({ page }) => {
-  const childKey: string | undefined = TEST_PAGE_WITH_CHILDREN.childPageKeys![0];
+test('active link has a different color', async ({ page }) => {
+  const link = page.getByRole('link', { name: TEST_PAGE.name });
+  const linkColorBefore = await link.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('color');
+  });
+
+  await page.getByRole('link', { name: TEST_PAGE.name }).click();
+
+  const linkColorAfter = await link.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('color');
+  });
+
+  expect(linkColorBefore).not.toBe(linkColorAfter);
+});
+
+test('page visit sets active link', async ({ page, baseURL }) => {
+  const link = page.getByRole('link', { name: TEST_PAGE.name });
+  const linkColorBefore = await link.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('color');
+  });
+
+  await page.goto(`${baseURL}/${TEST_PAGE.link}`);
+
+  const linkColorAfter = await link.evaluate((el) => {
+    return window.getComputedStyle(el).getPropertyValue('color');
+  });
+
+  expect(linkColorBefore).not.toBe(linkColorAfter);
+});
+
+test('page visit opens additional navigation', async ({ page, baseURL }) => {
+  const childKey = TEST_PAGE_WITH_CHILDREN.childPageKeys![0];
   if (!childKey) throw new Error('childKey is undefined');
-  const mockPage = mockNavigation.pages[childKey];
-  if (!mockPage) throw new Error('mockPage is undefined');
-  await expect(page.getByRole('link', { name: `page: ${mockPage.name}` })).toBeHidden();
+
+  const childPage = mockNavigation.pages[childKey];
+  if (!childPage) throw new Error('childPage is undefined');
+
+  const childLink = page.getByRole('link', { name: childPage.name });
+
+  await expect(childLink).toBeHidden();
+
+  await page.goto(`${baseURL}/${TEST_PAGE_WITH_CHILDREN.link}`);
+
+  await expect(childLink).toBeVisible();
+});
+
+test('click on an item opens additional navigation', async ({ page }) => {
+  const childKey = TEST_PAGE_WITH_CHILDREN.childPageKeys![0];
+  if (!childKey) throw new Error('childKey is undefined');
+
+  const childPage = mockNavigation.pages[childKey];
+  if (!childPage) throw new Error('childPage is undefined');
+
+  const childLink = page.getByRole('link', { name: childPage.name });
+
+  await expect(childLink).toBeHidden();
 
   await page.getByRole('link', { name: TEST_PAGE_WITH_CHILDREN.name }).click();
 
-  await expect(page.getByRole('link', { name: mockPage.name })).toBeVisible();
+  await expect(childLink).toBeVisible();
 });
 
 test('click on a button opens additional navigation', async ({ page }) => {
@@ -105,4 +155,17 @@ test('click on a button closes additional navigation', async ({ page }) => {
   }
 
   await expect(page.getByRole('heading', { level: 2, name: 'home page' })).toBeVisible();
+});
+
+test('button expand navigation only visible on mobile', async ({ page }) => {
+  const button = page.getByRole('button', { name: 'expand main navigation' });
+  await expect(button).toBeHidden();
+  const height = page.viewportSize()?.height ?? 1080;
+
+  await page.setViewportSize({
+    width: 959,
+    height,
+  });
+
+  await expect(button).toBeVisible();
 });
