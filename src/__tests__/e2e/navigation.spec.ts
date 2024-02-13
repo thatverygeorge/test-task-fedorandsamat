@@ -1,4 +1,5 @@
-import { test, expect } from '@playwright/test';
+import { test } from '@/__tests__/fixtures/customPlaywrightTest';
+import { expect } from '@playwright/test';
 import mockNavigation from '@/__tests__/fixtures/navigation';
 import type { Page } from '@/types';
 
@@ -13,13 +14,6 @@ if (!TEST_PAGE) throw new Error('TEST_PAGE is undefined');
 if (!TEST_PAGE_WITH_CHILDREN) throw new Error('TEST_PAGE_WITH_CHILDREN is undefined');
 
 test.beforeEach(async ({ page }) => {
-  await page.route('https://prolegomenon.s3.amazonaws.com/contents.json', (route) =>
-    route.fulfill({
-      status: 200,
-      body: JSON.stringify(mockNavigation),
-    })
-  );
-
   await page.goto('/');
 });
 
