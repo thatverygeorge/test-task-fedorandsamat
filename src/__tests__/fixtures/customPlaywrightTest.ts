@@ -10,6 +10,6 @@ export const test = base.extend({
       })
     );
 
-    use(page);
+    await use(page);
   },
 });
